@@ -86,7 +86,7 @@ const createPokemonCard = (index, pokemon, container) => {
   if (typeof pokemon !== 'undefined') {
     const card = document.createElement('div');
     card.setAttribute('name', pokemon.name);
-    card.className = 'pokemon-card  flex-wrap font grow';
+    card.className = 'pokemon-card flex-wrap font grow';
     card.id = pokemon.name;
     card.innerHTML = `<span class="pokemon-name">${pokemon.name}</span>
                       <span class="pokemon-cp-hp">MAX CP ${pokemon.stats['max-cp']} / MAX HP ${pokemon.stats['max-cp']}</span>              
@@ -109,6 +109,7 @@ const searchPokemon = () => {
   topTitle.textContent = '';
   iconTitle.style.visibility = 'hidden';
   btnGoBack.style.visibility = 'hidden';
+  btnChangeOrder.style.visibility = 'hidden';
   if (isContainerSection === true) {
     divCardContainerBlock.style.display = 'none';
     isContainerSection = false;
@@ -264,6 +265,7 @@ const showAllPokemons = (listData) => {
 btnGoBack.addEventListener('click', (event) => {
   divCardContainerFlex.style.display = 'none';
   divCardContainerBlock.style.display = 'block';
+  btnChangeOrder.style.visibility = 'hidden';
   isContainerSection = true;
   event.target.style.visibility = 'hidden';
 });
@@ -573,7 +575,7 @@ const loadPage = () => {
 
 document.addEventListener('click', (event) => {
   const element = event.target.parentNode;
-  if (element.className === 'pokemon-card  flex-wrap font grow') {
+  if (element.className === 'pokemon-card flex-wrap font grow' || event.target.className === 'pokemon-card flex-wrap font grow') {
     modalMode.style.display = 'block';
     divMoveAndAttacks.style.display = 'flex';
     divcalculateMove.style.display = 'none';

@@ -463,7 +463,7 @@ nav{
 }  
 .div-title-slider{
   margin: 1.5em 0;
-  width: 100%;
+  width: 98%;
   height: 1em;
   background: rgb(98, 97, 107);
   position: relative;
@@ -491,7 +491,7 @@ nav{
   top:-.5em;
   padding: .2em;
   position: absolute;
-  right: .1em;
+  right: 0;
 }
 .result{
   position: relative;
@@ -637,7 +637,7 @@ nav{
     /* background:whitesmoke; */
     height: 80px;
     width: 100%;  
-    /* box-shadow: 0 0 10px 0 rgb(77, 80, 79);     */
+    /* box-shadow: 0 0 5px 0 rgb(77, 80, 79);     */
   }
 
 /*----------------Medias quaries----------------*/
@@ -646,7 +646,7 @@ nav{
   #modal-window{    
     width: 95vw;
     left: calc(5vw/2);    
-    top:10%;
+    top:15%;
   }
   .image-modal{
     width: 80px;
@@ -753,7 +753,7 @@ nav{
     #modal-window{    
       width: 30vw;
       left: calc(70vw/2);
-      top:20vh;
+      top:15%;
     }
     .f-medium{
       font-size: 1.5em;;
@@ -767,7 +767,7 @@ nav{
 
     aside{
       /* background:#1B262C; */
-      width: 15%;
+      width: 10%;
       min-width: 300px;
       height: 810px;
       margin: .5em;
@@ -817,10 +817,14 @@ nav{
     .title-slider-p{  font-size: 1.5em; }
     
     #img-pokemon-modal{
+      width: 100px;
+      height: 100px;
       position: relative;
-      left: calc((100% - 120px)/2);
-      top: 10px;
+      left: calc((100% - 100px)/2);
+      top: 20px;
     }
+    /* .image-modal{
+    } */
     .message{
       font-size: 2em;;
     }
