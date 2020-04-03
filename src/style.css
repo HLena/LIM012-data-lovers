@@ -90,6 +90,7 @@ body{
   z-index: 2;
 }
 #modal-window{  
+  margin-top: 120px;
   background: #fff;
   border-radius: 1em;
   z-index: 1;  
@@ -319,10 +320,6 @@ body{
   width: 100vw;  
   min-height: 500px;
   height: auto;
-  position: relative;
-  bottom: 0px;
-  overflow-x: hidden;  
-  /* background: rgb(236, 196, 16); */
 }
 
 #header-page{
@@ -362,12 +359,12 @@ body{
 }
 /*----------------navbar-----------------*/
 nav{
-  background:var(--color-2);
-  top: 0;
+  background:var(--color-2);  
   height: 60px;
   display: flex;  
   justify-content: center;
   z-index: 1;  
+  top: 0px;
 } 
 
 .option{
@@ -634,19 +631,25 @@ nav{
    #top-pagination{
     display: flex;
     justify-content: center;
-    /* background:whitesmoke; */
     height: 80px;
     width: 100%;  
-    /* box-shadow: 0 0 5px 0 rgb(77, 80, 79);     */
   }
+  .image-modal{
+    margin: .2em;
+  }
+
 
 /*----------------Medias quaries----------------*/
 
 @media screen and (max-width:499px){
-  #modal-window{    
+  #modal-mode{
+    padding: 1em 0;
+  }
+  #modal-window{  
+    margin-top: 60px;  
     width: 95vw;
     left: calc(5vw/2);    
-    top:15%;
+    /* top:12vh; */
   }
   .image-modal{
     width: 80px;
@@ -670,7 +673,7 @@ nav{
   #modal-window{    
     width: 55vw;
     left: calc(45vw/2);
-    top:10%;
+    /* top:12vh; */
   }
   .title-slider-p{  
     font-size: 1.2em;
@@ -679,8 +682,10 @@ nav{
     padding: 0 .2em;
   }
   #img-pokemon-modal{
+    width: 100px;
+    height: 100px;
     position: relative;
-    left: calc((100% - 120px)/2);
+    left: calc((100% - 100px)/2);
     top: 10px;
   }
   .f-medium{
@@ -704,7 +709,8 @@ nav{
   .icon-medium{ width: 20px; height: 20px;}
   
   .top-menu{
-     display:flex;  position:sticky;  box-shadow: 0 0 20px rgb(33, 36, 35); 
+     display:flex;
+     box-shadow: 0 0 20px rgb(33, 36, 35); 
   }  
   aside{ 
     background:#1B262C; 
@@ -753,7 +759,7 @@ nav{
     #modal-window{    
       width: 30vw;
       left: calc(70vw/2);
-      top:15%;
+      /* top:12vh; */
     }
     .f-medium{
       font-size: 1.5em;;
@@ -811,8 +817,6 @@ nav{
       padding: .5em .2em;
       color:#ECF2F3;
       font-size: 1em;
-
-      /* font-weight: bolder;       */
     }
     .title-slider-p{  font-size: 1.5em; }
     
@@ -823,10 +827,11 @@ nav{
       left: calc((100% - 100px)/2);
       top: 20px;
     }
-    /* .image-modal{
-    } */
     .message{
       font-size: 2em;;
+    }
+    #modal-mode{
+      padding: 2em 0;
     }
   }
   
