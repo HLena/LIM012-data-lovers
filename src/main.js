@@ -576,7 +576,7 @@ const loadPage = () => {
 document.addEventListener('click', (event) => {
   const element = event.target.parentNode;
   if (element.className === 'pokemon-card flex-wrap font grow' || event.target.className === 'pokemon-card flex-wrap font grow') {
-    modalMode.style.display = 'block';
+    modalMode.style.display = 'flex';
     divMoveAndAttacks.style.display = 'flex';
     divcalculateMove.style.display = 'none';
     btnCalc.name = 'calculate';
