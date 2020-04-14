@@ -1,9 +1,10 @@
 /* eslint-disable no-unused-vars */
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-console */
 /* eslint-disable no-loop-func */
+/* eslint-disable no-undef */
+/* eslint-disable no-param-reassign */
+
 import {
-  dinamicSearchPokemon, filterPokemon, orderBy, changeOrder, calculateBetterCombinations,
+  dinamicSearchPokemon, filterPokemon, sortBy, changeOrder, calculateBetterCombinations,
 } from './data.js';
 
 import data from './data/pokemon/pokemon.js';
@@ -29,44 +30,78 @@ const typeColors = {
   fighting: '#BD5022',
 };
 
-const desktopSize = 1025;
-
-let resultTypes = [];
-let resultResistant = [];
-let resultWeaknesses = [];
 let currentData = [];
-let isContainerSection = false;
-let isContainerShowMore = false;
-let isShowMove = true;
-let showMoreSection = '';
+const dataFiltered = [[], [], []];
+const optionsToFilter = ['type', 'resistant', 'weaknesses'];
+let isFlexContainer = true;
 let typeChoosed = '';
-let deg = 0;
-
-const optionsFilter = [];
-const positions = [0, 0, 0];
+const responsiveSize = 800;
 
 const getById = label => document.getElementById(label);
 const getByClass = label => document.getElementsByClassName(label);
 const getByQuery = label => document.querySelector(label);
+const getByQueryAll = label => document.querySelectorAll(label);
+const display = (element, state) => { element.style.display = state; };
 
-const divCardContainerFlex = getById('card-container-flex');
-const divCardContainerBlock = getById('card-container-block');
-const titleTop = getById('top-pagination-p');
-const modalMode = getById('modal-mode');
-
-const divOrderBy = getByClass('menu')[0];
-const divFilterBy = getByClass('menu')[1];
-
+// contenedores div
+const cardContainer = getById('cards-container');
+const carouselsContainer = getById('carousels-container');
 const modalWindow = getById('modal-window');
 
-const orderBySelect = getById('order-by-select');
-const topTitle = getById('top-pagination-p');
-const iconTitle = getByQuery('.icon-title');
+// botones
+const goBackBtn = getByQuery('#back-btn');
+const goUpBtn = getById('arrow-up-btn');
+const menuBtn = getById('menu-btn');
+const homeBtn = getById('home-btn');
+const closeModalBtn = getById('close-modal');
 
-const btnChangeOrder = getById('btn-change-order');
-const btnGoBack = getByQuery('.icon-back');
-const btnGoTop = getByQuery('#icon-arrow-up');
-const btnHome = getByQuery('#icon-nav-home');
+const titleContainer = getByQuery('.title-container');
+let ascendent;
+const sortBtn = getById('btn-sort');
+
+
+// variables para manejar el carrusel de tarjetas
+const carouselContainer = getByQueryAll('.carousel-container');
+const ctrlLeft = getByQueryAll('.control-left');
+const ctrlRight = getByQueryAll('.control-right');
+const titlesCarousel = getByQueryAll('h3.title-carousel');
+
+// link to see all
+const linksSeeAll = getByQueryAll('.see-all');
+
+// barra de busqueda
+const inputBarSearch = getById('input-search');
+
+// elementos para manejar el menu
+const ulFilter = getByQuery('.ul-filter');
+const ulSort = getByQuery('.ul-sort');
+let dotsList;
+
+// To modal effect
+const modalMode = getById('modal-mode');
+
+menuBtn.addEventListener('click', (event) => {
+  const menu = getById('menu');
+  if (menu.style.left < '0') {
+    menu.style.left = '0px';
+    event.target.classList.replace('fa-bars', 'fa-times');
+  } else {
+    menu.style.left = '-280px';
+    event.target.classList.replace('fa-times', 'fa-bars');
+  }
+});
+
+const divMain = (value) => {
+  if (value) {
+    display(cardContainer, 'none');
+    display(carouselsContainer, 'block');
+    isFlexContainer = false;
+  } else {
+    display(carouselsContainer, 'none');
+    display(cardContainer, 'flex');
+    isFlexContainer = true;
+  }
+};
 
 const createPokemonType = (type) => {
   const divPokemonType = document.createElement('div');
@@ -104,343 +139,185 @@ const showCard = (dataPokemon, container) => {
   }
 };
 
-const searchPokemon = () => {
-  orderBySelect.selectedIndex = 0;
-  topTitle.textContent = '';
-  iconTitle.style.visibility = 'hidden';
-  btnGoBack.style.visibility = 'hidden';
-  btnChangeOrder.style.visibility = 'hidden';
-  if (isContainerSection === true) {
-    divCardContainerBlock.style.display = 'none';
-    isContainerSection = false;
-    divCardContainerFlex.style.display = 'flex';
-  }
-  const wordIntroduced = getById('input-bar-search').value;
+goBackBtn.addEventListener('click', () => {
+  titleContainer.style.visibility = 'hidden';
+  sortBtn.style.visibility = 'hidden';
+  divMain(true);
+});
+
+homeBtn.addEventListener('click', () => {
+  if (isFlexContainer === false) divMain(false);
+  titleContainer.style.visibility = 'hidden';
+  sortBtn.style.visibility = 'hidden';
+  currentData = data.pokemon;
+  showCard(currentData, cardContainer);
+});
+
+
+/* System to search a pokemon by name or first letter */
+const searchSystem = () => {
+  if (isFlexContainer === false) divMain(false);
+  const wordIntroduced = getById('input-search').value;
   currentData = dinamicSearchPokemon(wordIntroduced);
   if (currentData.length > 0) {
-    showCard(currentData, divCardContainerFlex);
+    showCard(currentData, cardContainer);
   } else if (currentData.length === 0 && wordIntroduced.length !== 0) {
-    divCardContainerFlex.innerHTML = `<p class="message font text-aling">
+    cardContainer.innerHTML = `<p class="message font text-aling">
     Sorry, no results were found for your search <span class="import-text font">${wordIntroduced}</span> make sure it is well written
     </p>`;
   } else {
     currentData = data.pokemon;
-    showCard(currentData, divCardContainerFlex);
+    showCard(currentData, cardContainer);
   }
 };
 
-const createOptionFilter = (name) => {
-  const li = document.createElement('li');
-  const icon = document.createElement('img');
-  li.className = 'option filter-option';
-  icon.className = 'icon-medium icon-filter';
-  icon.setAttribute('src', `images/${name}-icon.png`);
-  li.textContent = name;
-  li.append(icon);
-  optionsFilter.push(li);
-  return li;
-};
-
-const pokemonTypes = Object.keys(typeColors);
-
-
-const putPokemonTypesOnMenu = (container) => {
-  for (let key = 0; key < pokemonTypes.length; key += 1) {
-    container.appendChild(createOptionFilter(pokemonTypes[key]));
-  }
-  divFilterBy.appendChild(container);
-};
-
-const showMenu = (which) => {
-  const asideLateralMenu = document.getElementsByTagName('aside')[0];
-  asideLateralMenu.style.width = (window.screen.width < 768) ? '80%' : '50%';
-  if (which === 'filter') {
-    divOrderBy.style.display = 'none';
-    divFilterBy.style.display = 'block';
-  } else {
-    divFilterBy.style.display = 'none';
-    divOrderBy.style.display = 'block';
+/* carousel system */
+const carouselSystem = () => {
+  for (let index = 0; index < carouselContainer.length; index += 1) {
+    ctrlLeft[index].addEventListener('click', () => {
+      carouselContainer[index].scrollLeft -= carouselContainer[index].offsetWidth;
+    });
+    ctrlRight[index].addEventListener('click', () => {
+      carouselContainer[index].scrollLeft += carouselContainer[index].offsetWidth;
+    });
+    linksSeeAll[index].addEventListener('click', () => {
+      titleContainer.querySelector('#title-span').textContent = titlesCarousel[index].textContent;
+      titleContainer.style.visibility = 'visible';
+      divMain(false);
+      showCard(dataFiltered[index], cardContainer);
+    });
   }
 };
 
-const hideMenu = () => {
-  modalMode.style.display = 'none';
-  const lateralMenu = getById('lateral-menu');
-  lateralMenu.style.width = '0';
-  lateralMenu.getElementsByClassName('section-filter-by')[0].style.display = 'block';
-};
+/* event that call to searchSystem when there is an input */
+inputBarSearch.addEventListener('keyup', searchSystem);
 
 const onlyText = (e) => {
   const key = e.keyCode || e.which;
   const tecla = String.fromCharCode(key).toLowerCase();
   const letras = ' áéíóúabcdefghijklmnñopqrstuvwxyz';
-
   if (letras.indexOf(tecla) === -1) {
     e.preventDefault();
   }
 };
 
-
-btnChangeOrder.addEventListener('click', () => {
-  deg += 180;
-  btnChangeOrder.style.transform = `rotate(${deg}deg)`;
-  currentData = changeOrder(currentData);
-  showCard(currentData, divCardContainerFlex);
-});
-// const changeOrderCurrentData = () => {
-// };
-
-const inputBarSearch = getById('input-bar-search');
-inputBarSearch.addEventListener('keyup', searchPokemon);
 inputBarSearch.addEventListener('keypress', onlyText, false);
 
-const topMenuFilterBtn = getByClass('top-menu-option')[0];
-const topMenuOrderBtn = getByClass('top-menu-option')[1];
-const btnCloseMenu = getById('close-menu');
-const btnCloseModal = getById('close-modal');
+/* -------- muestra pokemones despues del filrtado por tipo -----------*/
 
-topMenuFilterBtn.addEventListener('click', () => {
-  showMenu('filter');
-  modalMode.style.display = 'block';
-});
-topMenuOrderBtn.addEventListener('click', () => {
-  showMenu('order');
-  modalMode.style.display = 'block';
-});
-btnCloseMenu.addEventListener('click', hideMenu);
-
-btnCloseModal.addEventListener('click', () => {
-  isShowMove = true;
-  modalWindow.style.display = 'none';
-  modalMode.style.display = 'none';
-});
-
-const translateX = (pos, slide, width) => {
-  slide.style.left = `${pos * -width}px`;
-};
-let widthCard = 0;
-
-const goToNextItem = (slide, sliderCards, index) => {
-  const numCards = sliderCards.getElementsByClassName('pokemon-card').length;
-  widthCard = sliderCards.offsetWidth / numCards;
-  const visibleItems = Math.round(slide.offsetWidth / widthCard);
-  const totalItems = sliderCards.getElementsByClassName('pokemon-card').length;
-  const hiddenItems = totalItems - visibleItems;
-  if (positions[index] >= 0 && positions[index] < hiddenItems) {
-    positions[index] += 1;
-    translateX(positions[index], sliderCards, widthCard);
-  }
-};
-
-const goToPrevItem = (slider, index) => {
-  if (positions[index] > 0) {
-    positions[index] -= 1;
-    translateX(positions[index], slider, widthCard);
-  }
-};
-
-const sliderSystem = () => {
-  const slideCards = divCardContainerBlock.getElementsByClassName('slide-cards');
-  const slide = divCardContainerBlock.getElementsByClassName('slide');
-  const ctrlPrevButtons = getByClass('ctrl-prev');
-  const ctrlNextButtons = getByClass('ctrl-next');
-  for (let i = 0; i < 3; i += 1) {
-    ctrlPrevButtons[i].addEventListener('click', () => {
-      goToPrevItem(slideCards[i], i);
-    });
-    ctrlNextButtons[i].addEventListener('click', () => {
-      goToNextItem(slide[i], slideCards[i], i);
-    });
-  }
-};
-/* --------------------- mostrar mas pokemones ------------------------ */
-const showAllPokemons = (listData) => {
-  divCardContainerFlex.style.display = 'flex';
-  divCardContainerBlock.style.display = 'none';
-  showCard(listData, divCardContainerFlex);
-  isContainerSection = false;
-  isContainerShowMore = true;
-};
-
-btnGoBack.addEventListener('click', (event) => {
-  divCardContainerFlex.style.display = 'none';
-  divCardContainerBlock.style.display = 'block';
-  btnChangeOrder.style.visibility = 'hidden';
-  isContainerSection = true;
-  event.target.style.visibility = 'hidden';
-});
-
-const showMore = getByClass('show-more');
-showMore[0].addEventListener('click', () => {
-  btnGoBack.style.visibility = 'visible';
-  showAllPokemons(resultTypes);
-  currentData = resultTypes;
-  titleTop.textContent = `${typeChoosed} Type Pokemons`;
-  topTitle.textContent = typeChoosed;
-  showMoreSection = 'type';
-});
-
-showMore[1].addEventListener('click', () => {
-  btnGoBack.style.visibility = 'visible';
-  showAllPokemons(resultResistant);
-  currentData = resultResistant;
-  titleTop.textContent = `Pokemons resistant to the ${typeChoosed} Type`;
-  topTitle.textContent = typeChoosed;
-  showMoreSection = 'resistant';
-});
-
-showMore[2].addEventListener('click', () => {
-  btnGoBack.style.visibility = 'visible';
-  showAllPokemons(resultWeaknesses);
-  currentData = resultWeaknesses;
-  titleTop.textContent = `Pokemons weaknesses to the ${typeChoosed} Type`;
-  topTitle.textContent = typeChoosed;
-  showMoreSection = 'weaknesses';
-});
-
-const showMessageInSection = (container, section) => {
-  container.innerHTML = `<p class="message font text-aling" >Sorry, there are no ${section} pokemons for this type</p>`;
-};
-
-/* -------- muestra mokempnes despues del filrtado por tipo -----------*/
-const showPokemonInSections = () => {
-  if (isContainerSection === false) {
-    isContainerSection = true;
-    divCardContainerFlex.style.display = 'none';
-    btnChangeOrder.style.visibility = 'hidden';
-    divCardContainerBlock.style.display = 'block';
-  }
-  const sliders = divCardContainerBlock.getElementsByClassName('slider');
-  const divSections = divCardContainerBlock.getElementsByClassName('slide-cards');
-  divSections[0].innerHTML = '';
-  divSections[1].innerHTML = '';
-  divSections[2].innerHTML = '';
-  showCard(resultTypes, divSections[0]);
-  if (resultResistant.length > 0) {
-    showCard(resultResistant, divSections[1]);
-  } else {
-    sliders[1].querySelector('.show-more').style.visibility = 'hidden';
-    sliders[1].getElementsByTagName('button')[0].style.visibility = 'hidden';
-    sliders[1].getElementsByTagName('button')[1].style.visibility = 'hidden';
-    showMessageInSection(divSections[1], 'resistant');
-  }
-
-  if (resultWeaknesses.length > 0) {
-    showCard(resultWeaknesses, divSections[2]);
-    sliders[2].querySelector('.show-more').style.visibility = 'visible';
-    sliders[2].getElementsByTagName('button')[0].style.visibility = 'visible';
-    sliders[2].getElementsByTagName('button')[1].style.visibility = 'visible';
-  } else {
-    sliders[2].querySelector('.show-more').style.visibility = 'hidden';
-    sliders[2].getElementsByTagName('button')[0].style.visibility = 'hidden';
-    sliders[2].getElementsByTagName('button')[1].style.visibility = 'hidden';
-    showMessageInSection(divSections[2], 'resistant');
-  }
-};
-
-const filterPokemonsByType = (type) => {
-  resultTypes = filterPokemon('type', type);
-  resultResistant = filterPokemon('resistant', type);
-  resultWeaknesses = filterPokemon('weaknesses', type);
-};
-
-const filterSystem = () => {
-  titleTop.textContent = '';
-  const titleSlider = getByClass('title-slider-p');
-  const resultSlider = getByClass('result');
-  for (let i = 0; i < optionsFilter.length; i += 1) {
-    optionsFilter[i].addEventListener('click', () => {
-      window.scrollTo(0, window.scrollY);
-      orderBySelect.selectedIndex = 0;
-      // eslint-disable-next-line no-return-assign
-      optionsFilter.forEach(element => element.style.background = '#1B262C');
-      optionsFilter[i].style.background = 'rgba(38, 52, 59, 0.822)';
-      isContainerShowMore = false;
-      if (window.innerWidth < desktopSize) hideMenu();
-      btnChangeOrder.style.visibility = 'hidden';
-      isContainerShowMore = false;
-      topTitle.textContent = optionsFilter[i].textContent;
-      iconTitle.setAttribute('src', `images/${optionsFilter[i].textContent}-icon.png`);
-      iconTitle.style.visibility = 'visible';
-      filterPokemonsByType(optionsFilter[i].textContent);
-      typeChoosed = optionsFilter[i].textContent;
-      resultSlider[0].textContent = `${resultTypes.length}`;
-      resultSlider[1].textContent = `${resultResistant.length}`;
-      resultSlider[2].textContent = `${resultWeaknesses.length}`;
-      titleSlider[0].textContent = `${typeChoosed} Pokemons`;
-      titleSlider[1].textContent = `Pokemons resistant to ${typeChoosed}`;
-      titleSlider[2].textContent = `Pokemons weak to ${typeChoosed} `;
-      showPokemonInSections();
-    });
-  }
-};
-
-// revisando codigo
-const orderSections = (option) => {
-  resultTypes = orderBy(resultTypes, option);
-  resultResistant = orderBy(resultResistant, option);
-  resultWeaknesses = orderBy(resultWeaknesses, option);
-  showPokemonInSections();
-};
-
-const orderSystem = () => {
-  if (window.innerWidth >= desktopSize) {
-    orderBySelect.addEventListener('change', (event) => {
-      deg = 0;
-      btnChangeOrder.style.transform = `rotate(${deg}deg)`;
-      if (event.target.value !== '') {
-        btnChangeOrder.style.visibility = (isContainerSection) ? 'hidden' : 'visible';
-        if (isContainerSection) {
-          orderSections(event.target.value);
-        } else {
-          currentData = orderBy(currentData, event.target.value);
-          showCard(currentData, divCardContainerFlex);
-        }
-      }
-    });
-  } else {
-    const whichOrder = ['max-cp', 'max-hp', 'a-z'];
-    const optionsOrder = getByClass('order-option');
-    for (let i = 0; i < optionsOrder.length; i += 1) {
-      optionsOrder[i].addEventListener('click', () => {
-        deg = 0;
-        btnChangeOrder.style.transform = `rotate(${deg}deg)`;
-        hideMenu();
-        for (let j = 0; j < optionsOrder.length; j += 1) {
-          optionsOrder[j].style.background = '#1B262C';
-        }
-        optionsOrder[i].style.background = 'rgba(38, 52, 59, 0.822)';
-        btnChangeOrder.style.visibility = (isContainerSection) ? 'hidden' : 'visible';
-        if (isContainerSection) {
-          orderSections(whichOrder[i]);
-        } else {
-          currentData = orderBy(currentData, whichOrder[i]);
-          showCard(currentData, divCardContainerFlex);
-          // changeOrderCurrentData(divCardContainerFlex);
-        }
-      });
+const showRecommendedPokemons = () => {
+  const carousels = getByQueryAll('.carousel');
+  for (let i = 0; i < carousels.length; i += 1) {
+    carousels[i].innerHTML = '';
+    if (dataFiltered[i].length > 0) {
+      showCard(dataFiltered[i], carousels[i]);
+    } else {
+      ctrlLeft[i].style.visibility = 'hidden';
+      ctrlRight[i].style.visibility = 'hidden';
+      linksSeeAll[i].style.visibility = 'hidden';
+      // carousels[i].style.visibility = 'hidden';
     }
   }
 };
 
-// eslint-disable-next-line no-shadow
-let menuConstructed = false;
-const menuSystem = () => {
-  const ulFilterOptions = getById('ul-filter-options');
-  if (menuConstructed === false) {
-    putPokemonTypesOnMenu(ulFilterOptions);
-    menuConstructed = true;
+const filterPokemonsByType = (type) => {
+  const quantity = getByQueryAll('.num');
+  const title = getByQueryAll('.type-choosed');
+  for (let index = 0; index < optionsToFilter.length; index += 1) {
+    dataFiltered[index] = filterPokemon(optionsToFilter[index], type);
+    quantity[index].textContent = dataFiltered[index].length;
+    title[index].textContent = type;
   }
-
-  const buttonOrder = getById('menu-btn-order');
-  const buttonFilter = getById('menu-btn-filter');
-
-  orderSystem(buttonOrder);
-  filterSystem(buttonFilter, ulFilterOptions);
 };
+
+
+let checked;
+const filterSystem = () => {
+  ulFilter.addEventListener('click', (event) => {
+    if (event.target.className === 'li-filter') {
+      titleContainer.style.visibility = 'hidden';
+      sortBtn.style.visibility = 'hidden';
+      if (isFlexContainer) divMain(true);
+      typeChoosed = event.target.textContent;
+      filterPokemonsByType(typeChoosed);
+      showRecommendedPokemons();
+      if (window.screen.width < responsiveSize) {
+        dotsList = ulFilter.querySelectorAll('i.fa-circle');
+        dotsList.forEach((element) => { if (element.className === 'fas fa-circle selected') checked = element; });
+        if (checked !== undefined) checked.classList.remove('selected');
+        const i = event.target.querySelector('i');
+        i.classList.add('selected');
+      }
+    }
+  });
+};
+
+// revisando codigo
+const sortRecomnendedPokemons = (option) => {
+  dataFiltered.forEach((dataFilter) => {
+    dataFilter = sortBy(dataFilter, option);
+  });
+  showRecommendedPokemons();
+};
+
+sortBtn.addEventListener('click', () => {
+  if (ascendent) {
+    if (sortBtn.classList.contains('fa-sort-alpha-down')) {
+      sortBtn.classList.replace('fa-sort-alpha-down', 'fa-sort-alpha-up');
+      sortBtn.setAttribute('title', 'reverse alphabetical');
+    } else {
+      sortBtn.classList.replace('fa-sort-amount-down-alt', 'fa-sort-amount-up-alt');
+      sortBtn.setAttribute('title', 'Descending Order');
+    }
+    ascendent = false;
+  } else if (ascendent === false) {
+    if (sortBtn.classList.contains('fa-sort-alpha-up')) {
+      sortBtn.classList.replace('fa-sort-alpha-up', 'fa-sort-alpha-down');
+      sortBtn.setAttribute('title', 'alphabetical order');
+    } else {
+      sortBtn.classList.replace('fa-sort-amount-up-alt', 'fa-sort-amount-down-alt');
+      sortBtn.setAttribute('title', 'Ascending Order');
+    }
+    ascendent = true;
+  }
+  currentData = changeOrder(currentData);
+  showCard(currentData, cardContainer);
+});
+
+const sortSystem = () => {
+  ulSort.addEventListener('click', (event) => {
+    if (event.target.className === 'li-sort') {
+      if (isFlexContainer) {
+        currentData = sortBy(currentData, event.target.textContent);
+        // titleContainer.style.visibility = 'visible';
+        showCard(currentData, cardContainer);
+        sortBtn.className = 'grow cursor fas';
+        ascendent = true;
+        if (event.target.textContent === 'alphabethic') {
+          sortBtn.classList.add('fa-sort-alpha-down');
+          sortBtn.setAttribute('title', 'alphabetical order');
+        } else {
+          sortBtn.classList.add('fa-sort-amount-down-alt');
+          sortBtn.setAttribute('title', 'Ascending Order');
+        }
+        sortBtn.style.visibility = 'visible';
+      } else sortRecomnendedPokemons(event.target.textContent);
+
+      if (window.screen.width < responsiveSize) {
+        dotsList = ulSort.querySelectorAll('i.fa-circle');
+        dotsList.forEach((element) => { if (element.className === 'fas fa-circle selected') checked = element; });
+        if (checked !== undefined) checked.classList.remove('selected');
+        const i = event.target.querySelector('i');
+        i.classList.add('selected');
+      }
+    }
+  });
+};
+
+
 const createIconType = (type) => {
   const iconType = document.createElement('img');
-  iconType.className = 'icon-medium';
+  iconType.className = 'icon-type-modal';
   iconType.setAttribute('src', `images/${type}-icon.png`);
   return iconType;
 };
@@ -455,7 +332,7 @@ const showEvolution = (poke, container, prev, next) => {
         divContainer = document.createElement('div');
         divContainer.className = 'card-pokemon-evolition';
         divContainer.innerHTML = `<span class="font one-fraction ">${pokemon.name}</span>
-                                  <img src="${pokemon.img}" alt="" class="image-modal">`;
+                                  <img src="${pokemon.img}" alt="" class="img-modal">`;
         container.append(divContainer);
       }
     }
@@ -463,7 +340,7 @@ const showEvolution = (poke, container, prev, next) => {
   divContainer = document.createElement('div');
   divContainer.className = 'card-pokemon-evolition';
   divContainer.innerHTML = `<span class="font one-fraction ">${poke.name}</span>
-                            <img src="${poke.img}" alt="" class="image-modal">`;
+                            <img src="${poke.img}" alt="" class="img-modal">`;
   container.append(divContainer);
 
   if (next !== undefined) {
@@ -473,7 +350,7 @@ const showEvolution = (poke, container, prev, next) => {
         divContainer = document.createElement('div');
         divContainer.className = 'card-pokemon-evolition';
         divContainer.innerHTML = `<span class="font one-fraction">${pokemon.name}</span>
-                                  <img src="${pokemon.img}" alt="" class="image-modal">`;
+                                  <img src="${pokemon.img}" alt="" class="img-modal">`;
         container.append(divContainer);
       }
     }
@@ -489,13 +366,13 @@ const createIcons = (list, container) => {
 const buildTable = (list, table) => {
   table.innerHTML = '';
   table.innerHTML = `<tr><th></th>
-                    <th><img class="icon-small" src="images/type.png"></th>
-                    <th><img class="icon-small" src="images/box.png"></th>
-                    <th><img class="icon-small" src="images/energy.png"></th>
-                    <th><img class="icon-small" src="images/time.png"></tr>`;
+                    <th><img class="icon-modal" src="images/type.png"></th>
+                    <th><img class="icon-modal" src="images/box.png"></th>
+                    <th><img class="icon-modal" src="images/energy.png"></th>
+                    <th><img class="icon-modal" src="images/time.png"></tr>`;
   for (let i = 0; i < list.length; i += 1) {
     const row = `<tr><td>${list[i].name}</td>
-                    <td><img class="icon-small" src="/images/${list[i].type}-icon.png"></td>
+                    <td><img class="icon-type-modal" src="/images/${list[i].type}-icon.png"></td>
                     <td>${list[i]['base-damage']}</td>
                     <td>${list[i].energy}</td>
                     <td>${list[i]['move-duration-seg']}</td></tr>`;
@@ -523,8 +400,8 @@ const calculeDamage = (container, list) => {
   container.innerHTML = '';
   container.innerHTML += '<tr><th>Quick Move</th><th></th><th>Special Attack</th><th></th><th>Damage</th></tr>';
   for (let i = 0; i < list.length; i += 1) {
-    container.innerHTML += `<tr><td>${list[i][0]}</td><td><img src="images/plus1.png" class="icon-small"></td>
-                            <td>${list[i][1]}</td><td><img src="images/igual1.png" class="icon-small"></td>
+    container.innerHTML += `<tr><td>${list[i][0]}</td><td><img src="images/plus1.png" class="icon-modal"></td>
+                            <td>${list[i][1]}</td><td><img src="images/igual1.png" class="icon-modal"></td>
                             <td>${list[i][2]}</td></tr>`;
   }
 };
@@ -563,45 +440,49 @@ const showInfoPokemon = (name) => {
   showEvolution(pokemon, evolution, pokemon.evolution['prev-evolution'], pokemon.evolution['next-evolution']);
 };
 
+const menuSystem = () => {
+  sortSystem();
+  filterSystem();
+};
+
 const loadPage = () => {
   window.scrollTo(0, 0);
   currentData = data.pokemon;
-  const wordIntroduced = getById('input-bar-search').value;
   menuSystem();
-  if (wordIntroduced.length === 0 && isContainerSection === false) {
-    showCard(currentData, divCardContainerFlex);
-  }
+  showCard(currentData, cardContainer);
 };
 
 document.addEventListener('click', (event) => {
-  const element = event.target.parentNode;
-  if (element.className === 'pokemon-card flex-wrap font grow' || event.target.className === 'pokemon-card flex-wrap font grow') {
+  // console.log(event.target.className);
+  if (event.target.className === 'pokemon-card flex-wrap font grow') {
     modalMode.style.display = 'flex';
     divMoveAndAttacks.style.display = 'flex';
     divcalculateMove.style.display = 'none';
     btnCalc.name = 'calculate';
     btnCalc.textContent = 'Calculate Damage';
-    showInfoPokemon(element.id);
+    showInfoPokemon(event.target.id);
+  } else {
+    const element = event.target.parentNode;
+    if (element.className === 'pokemon-card flex-wrap font grow') {
+      modalMode.style.display = 'flex';
+      divMoveAndAttacks.style.display = 'flex';
+      divcalculateMove.style.display = 'none';
+      btnCalc.name = 'calculate';
+      btnCalc.textContent = 'Calculate Damage';
+      showInfoPokemon(element.id);
+    }
   }
 });
 
-btnHome.addEventListener('click', () => {
-  isContainerSection = false;
-  divCardContainerBlock.style.display = 'none';
-  divCardContainerFlex.style.display = 'flex';
-  iconTitle.style.visibility = 'hidden';
-  titleTop.textContent = '';
-  currentData = data.pokemon;
-  showCard(currentData, divCardContainerFlex);
-});
 
-btnGoTop.addEventListener('click', () => {
-  window.scrollTo(0, 0);
-});
+// ---------btn to go at top on the page-----------
 
 window.addEventListener('scroll', () => {
-  btnGoTop.style.height = (window.scrollY > 500) ? '60px' : '0px';
+  goUpBtn.style.visibility = (window.scrollY > 800) ? 'visible' : 'hidden';
+  goUpBtn.addEventListener('click', () => {
+    window.scrollTo(0, 0);
+  });
 });
 
-sliderSystem();
+carouselSystem();
 window.onload = loadPage;

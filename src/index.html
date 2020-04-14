@@ -7,206 +7,212 @@
     <link rel="shortcut icon" href="#">    
     <link rel="stylesheet" href="style.css" />    
     <link rel="stylesheet" href="styleIcon.css" />
-    <link href="https://fonts.googleapis.com/css?family=Baloo+Thambi+2&display=swap" rel="stylesheet">
+    <link href="https://s.googleapis.com/css?family=Baloo+Thambi+2&display=swap" rel="stylesheet">
             
   </head>
   <body>
-    <i class="icon-keyboard_arrow_up grow" id="icon-arrow-up"></i>
-    <div id="root">
+    <span class="fas fa-arrow-up grow" id="arrow-up-btn"></span>
 
-      <header id="header-page">        
-        <img id = "logo-pokemon" src="images/pokemon-go-1.png" alt="">
+      <header class="flex">        
+        <img src="images/pokemon-go-1.png" alt="">
+        <nav id="menu">                    
+            <ul>
+              <li><a id="home-btn" href="#"><span class="fas fa-home "></span> home</a></li>
+              <li class="submenu">
+                <a href="#"><span class="fas fa-filter "></span> filter <span class="down fas fa-angle-down"></span></a>
+                <ul class="ul-children ul-filter flex-wrap">
+                  <li><a class="li-filter" href="#"><img src="images/grass-icon.png" alt="" class="type-icon">grass<i class="fas fa-circle"></i></a></li>
+                  <li><a class="li-filter" href="#"><img src="images/fighting-icon.png" alt="" class="type-icon">fighting<i class="fas fa-circle"></i></a></li>
+                  <li><a class="li-filter" href="#"><img src="images/dark-icon.png" alt="" class="type-icon">dark<i class="fas fa-circle"></i></a></li>
+                  <li><a class="li-filter" href="#"><img src="images/fire-icon.png" alt="" class="type-icon">fire<i class="fas fa-circle"></i></a></li>
+                  <li><a class="li-filter" href="#"><img src="images/normal-icon.png" alt="" class="type-icon">normal<i class="fas fa-circle"></i></a></li>
+                  <li><a class="li-filter" href="#"><img src="images/rock-icon.png" alt="" class="type-icon">rock<i class="fas fa-circle"></i></a></li>
+                  <li><a class="li-filter" href="#"><img src="images/ice-icon.png" alt="" class="type-icon">ice<i class="fas fa-circle"></i></a></li>
+                  <li><a class="li-filter" href="#"><img src="images/water-icon.png" alt="" class="type-icon">water<i class="fas fa-circle"></i></a></li>
+                  <li><a class="li-filter" href="#"><img src="images/dragon-icon.png" alt="" class="type-icon">dragon<i class="fas fa-circle"></i></a></li>
+                  <li><a class="li-filter" href="#"><img src="images/bug-icon.png" alt="" class="type-icon">bug<i class="fas fa-circle"></i></a></li>
+                  <li><a class="li-filter" href="#"><img src="images/flying-icon.png" alt="" class="type-icon">flying<i class="fas fa-circle"></i></a></li>
+                  <li><a class="li-filter" href="#"><img src="images/ghost-icon.png" alt="" class="type-icon">ghost<i class="fas fa-circle"></i></a></li>
+                  <li><a class="li-filter" href="#"><img src="images/ground-icon.png" alt="" class="type-icon">ground<i class="fas fa-circle"></i></a></li>
+                  <li><a class="li-filter" href="#"><img src="images/electric-icon.png" alt="" class="type-icon">electric<i class="fas fa-circle"></i></a></li>
+                  <li><a class="li-filter" href="#"><img src="images/steel-icon.png" alt="" class="type-icon">steel<i class="fas fa-circle"></i></a></li>
+                  <li><a class="li-filter" href="#"><img src="images/poison-icon.png" alt="" class="type-icon">poison<i class="fas fa-circle"></i></a></li>
+                  <li><a class="li-filter" href="#"><img src="images/psychic-icon.png" alt="" class="type-icon">psychic<i class="fas fa-circle"></i></a></li>
+                  <li><a class="li-filter" href="#"><img src="images/fairy-icon.png" alt="" class="type-icon">fairy<i class="fas fa-circle"></i></a></li>
+                </ul>
+              </li>
+              <li><a href="#"><span class="fas fa-sort "></span> sort <span class="down fas fa-angle-down"></span></a>
+                <ul class="ul-children ul-sort flex-wrap">
+                  <li><a class="li-sort" href="#"><span class="fas fa-fist-raised"></span>max cp<i class="fas fa-circle"></i></a></li>
+                  <li><a class="li-sort" href="#"><span class="fas fa-heart"></span>max hp<i class="fas fa-circle"></i></a></li>
+                  <li><a class="li-sort" href="#"><span class="fas fa-sort-alpha-up-alt"></span>alphabethic<i class="fas fa-circle"></i></a></li>
+                </ul>
+              </li>
+            </ul>
+        </nav>
+        <span class="grow cursor fas fa-bars" id="menu-btn"></span>
+        <!-- <i class="fas fa-hamburger"></i> -->
       </header>
+      
+      
+      <main id="main" name="flex">   
+        <div class="bar-search flex container">
+          <i class="icon-search" title="Search" id="icon-search"></i>
+          <input type="text" class=" text-aling" name="close" id="input-search" placeholder="Insert Pokemon Name">            
+        </div>
+        <div class="title-container container flex">
+          <span id="back-btn" class="fas fa-arrow-left grow cursor"></span>         
+          <span id="title-span">Titulo de la seccion actual</span>
+          <span id='btn-sort' ></span>
+        </div>                                                       
+        <section id ="cards-container" class="flex-wrap container"> </section>            
 
+        <section id = "carousels-container">             
+
+          <div class="recommended-pokemons container">
+            <div class="title-indicators-container ">
+              <div class="num-and-title" >
+                <span class="num"></span>
+                <h3 class="title-carousel"><span class="type-choosed"></span> Pokemons</h3>              
+                <a class="see-all cursor" >See all</a>
+              </div>
+            </div>
+            <div class="main-container">
+              <button class="control-left" value="type" ><i  class="icon-arrow_back_ios grow" ></i></button>
+              <div class="carousel-container">
+                <div class="carousel type"></div>
+              </div>
+              <button class="control-right" value="type"><i class="icon-arrow_forward_ios grow" ></i></button>
+            </div>
+          </div>  
+
+          <div class="recommended-pokemons container">
+            <div class="title-indicators-container ">
+              <div class="num-and-title" >
+                <span class="num"></span>
+                <h3 class="title-carousel"> Pokemons resistant to <span class="type-choosed"></span></h3>              
+                <a class="see-all cursor" >See all</a>
+              </div>
+            </div>
+            <div class="main-container">
+              <button class="control-left" value="type" ><i  class="icon-arrow_back_ios grow"></i></button>
+              <div class="carousel-container">
+                <div class="carousel type"></div>
+              </div>
+            <button class="control-right" value="type"><i class="icon-arrow_forward_ios grow" ></i></button>
+            </div>            
+          </div>  
+
+          <div class="recommended-pokemons container  ">
+            <div class="title-indicators-container ">
+              <div class="num-and-title" >
+                <span class="num"></span>
+                <h3 class="title-carousel"> Pokemons weak to <span class="type-choosed"></span></h3>              
+                <a class="see-all cursor" >See all</a>
+              </div>
+            </div>
+            <div class="main-container">
+              <button class="control-left" value="type" ><i  class="icon-arrow_back_ios grow"></i></button>
+              <div class="carousel-container">
+                <div class="carousel type"></div>
+              </div>
+              <button class="control-right" value="type"><i class="icon-arrow_forward_ios grow"></i></button>
+            </div>            
+          </div>  
+
+        </section>
+
+      </main>
+          
       <div id="modal-mode" class="flex-wrap">     
-
-        <div id="modal-window" class="fixed">
-
-          <i class="icon-cross " id="close-modal"></i>
-
+        <i class="fas fa-times close-btn"></i>
+        
+        <div id="modal-window" class="fixed">  
+          
           <div id="div-img-modal">
-            <img id="img-pokemon-modal" class="image-modal" src="">
+            <img id="img-pokemon-modal" class="img-modal" src="">
           </div>  
           
           <section id="body-modal" class="modal flex-wrap">  
-            <span id="pokemon-name-modal" class="font f-medium f-blue one-fraction"></span>
-
-            <div class="column-1 flex-wrap color-container ">
-              <img src="images/cintam.png" alt="" class="icon-medium">          
-              <div class="font f-small">
-                  <span class="block f-blue">Height</span><span id="value-height" class=""></span>
+            <span id="pokemon-name-modal" class="f-blue "></span>
+    
+            <div class="detail-modal flex-wrap color-container ">
+              <img src="images/cintam.png" alt="" class="icon-modal">          
+              <div >
+                  <span class="block f-blue">Height</span><span id="value-height" class="data"></span>
               </div>
             </div>  
-
-            <div class="column-1 flex-wrap color-container">
-              <img src="images/balanza.png" alt="" class="icon-medium">
-              <div class="font f-small">
-                <span class="block f-blue">Weight</span><span id="value-weight" class="color-gray"></span>
+    
+            <div class="detail-modal flex-wrap color-container">
+              <img src="images/balanza.png" alt="" class="icon-modal">
+              <div>
+                <span class="block f-blue">Weight</span><span id="value-weight" class="data"></span>
               </div>          
             </div>
-
-            <div class="column-1 flex-wrap color-container">
-              <img src="images/world.png" alt="" class="icon-medium">
-              <div class="font f-small">
-                <span class="block f-blue">Region</span><span id="value-region" class="color-gray"></span>
+    
+            <div class="detail-modal flex-wrap color-container">
+              <img src="images/world.png" alt="" class="icon-modal">
+              <div>
+                <span class="block f-blue">Region</span><span id="value-region" class="data"></span>
               </div>
             </div>
-
-            <div class="column-1 flex-wrap color-container">
-              <img src="images/candy.png" alt="" class="icon-medium">
-              <div class="font f-small">
-                <span class="block f-blue">Candy</span><span id="value-candy" class="color-gray"></span>
+    
+            <div class="detail-modal flex-wrap color-container">
+              <img src="images/candy.png" alt="" class="icon-modal">
+              <div>
+                <span class="block f-blue">Candy</span><span id="value-candy" class="data"></span>
               </div>
             </div>
           
-            <div class="column-3 font color-container flex-wrap">
-              <span class="f-small f-blue three-fraction"> Type</span>            
-              <span class="f-small f-blue three-fraction"> Resistant</span>            
-              <span class="f-small f-blue three-fraction"> Weaknesses</span>            
+            <div class="detail-types-modal  color-container">
+              <span class=" f-blue "> Type</span>            
+              <span class=" f-blue "> Resistant</span>            
+              <span class=" f-blue "> Weaknesses</span>            
               <div id = "types" class="section-modal flex-wrap"></div>
               <div id = "resistant" class="section-modal flex-wrap"></div>
               <div id = "weaknesses" class="section-modal flex-wrap"></div>
             </div>
-
-            <div class="column-3 flex-wrap color-container">
-              <button id="btn-calculate" class="font f-small f-white grow" name = "calculate">Calculate Damage</button>
-
-              <div id="move-and-attack" class="column-3 flex-wrap">
-                <span class="two-fraction font f-small f-blue">special attacks</span>
-                <span class="two-fraction font f-small f-blue">quick move</span>
-
-                <table id="special-attacks-table" class="column-2 font">
-                  <!-- <tr><th>tipo</th><th>daño</th><th>energia</th>time</tr> -->
-                </table>
-
-                <table id="quick-move-table" class="column-2 font">                
-                </table>        
+    
+            <div id="move-attack-container"  class ="move-attack-container color-container">
+              <button id="btn-calculate" class="grow" name = "calculate">Calculate Damage</button>
+    
+              <div id="move-and-attack">
+                <!-- <span class="f-blue">special attacks</span>
+                <span class="f-blue">quick move</span>     -->
+                <table id="special-attacks-table" class="table-modal"></table>    
+                <table id="quick-move-table" class="table-modal "></table>        
               </div>
-
-              <div id="calculate-damage" class="column-3 flex-wrap">
-                <table id="table-damage" class=" column-3 font text-aling"></table>
+    
+              <div id="calculate-damage" class="move-attack-modal flex-wrap">
+                <table id="table-damage" class=" move-attack-modal  text-aling"></table>
               </div>
-            </div>
+            </div>    
+            
+            <span class="f-blue evolution-title">Evolution</span>            
+            <div id="evolution" class="flex-wrap">
 
-            <span class="one-fraction f-blue font f-small">Evolution</span>            
-
-            <div id="evolution" class="column-3 flex-wrap"></div>          
+            </div>          
             
           </section>
       </div>
       </div>
-                
-      <nav id="navbar" class="sticky">        
-        <i class="icon-home grow" id="icon-nav-home"></i>
-        <i class="icon-search" id="icon-nav-search"></i>
-        <input type="text" class="font text-aling" id="input-bar-search" placeholder="Insert Pokemon Name">
-              
-        </nav>
-        
-        <div class="top-menu sticky flex-wrap">
-          <a class="top-menu-option option grow">Filter By</a>
-          <a class="top-menu-option option grow">Order By</a>        
+            
+      <footer id="footer" >
+        <img src="images/nature.png" alt="" id="img-footer">
+        <div id="div-info-footer" class="text-aling">
+          <h2 class=" text-aling"><img src="images/normal.png" class="icon-small">POKEDEX</h2>
+          <h4 class=" text-aling"> Created by Elena Gordillo & Yudith Cumba</h4>
+          <span>
+            <i class="icon-css3 f-medium icons"></i> <i class="icon-github f-medium icons"></i> <i class="icon-html5 f-medium icons"></i> <i class="icon-javascript f-medium icons"></i>
+          </span>
         </div>
-        
-        <section id="section-body-conteiner">             
-          <aside id="lateral-menu">                            
-            <i class="icon-cross " id="close-menu"></i>
-            <div class="menu section-order-by ">
-              <li ><a href="#" class="option menu-option " id="menu-btn-order">Order by</a>
-                <ul id="ul-order-options">
-                  <li class = "option order-option" href="#">Max Cp</li>
-                  <li class = "option order-option" href="#">Max Hp</li>
-                  <li class = "option order-option" href="#">Alphabethic</li>
-                </ul>
-              </li>           
-            </div>
-            
-            <div class="menu section-filter-by ">
-              <li ><a href="#" class="option menu-option " id="menu-btn-filter">Filter by</a>            
-                <ul id="ul-filter-options">                
-                </ul>
-              </li>     
-            </div>                                
-            
-          </aside>
-          
-          <main id = "main">                                  
-            <div id="top-pagination">
-              <i class="icon-arrow-left2 icon-back grow"></i>
-              <img class="icon-title">
-              <span id="top-pagination-p" class="font"></span>
-              <img src="images/change-order.png" id="btn-change-order" class="grow">
-              <select name="order" id="order-by-select" class="font text-aling">
-                <option value="" class="font text-aling" selected>Order by</option>
-                <option value="max-cp" class="font text-aling">Attack Points</option> 
-                <option value="max-hp" class="font text-aling">Healty Points</option>
-                <option value="a-z" class="font text-aling">Alphabetic</option>
-              </select>  
-            </div>
-            
-            <div id ="card-container-flex" class="flex-wrap"> </div>
-            
-            <div id = "card-container-block" >   
+      </footer>
               
-              <div class="slider">
-                <div class="div-title-slider font">
-                  <div class="title-slider" ><span class="result"></span><span class="title-slider-p"></span>
-                  </div>
-                  <a class="show-more" >Ver más</a> </div>
-                  <div class="slide">
-                    <div class="slide-cards type"></div>                
-                  </div>
-                  <button class="ctrl-btn ctrl-prev grow" value="type" ><i  class="icon-arrow_back_ios icon-next-prev" ></i></button> 
-                  <button class="ctrl-btn ctrl-next grow" value="type"><i class="icon-arrow_forward_ios icon-next-prev" ></i></button>
-                </div>
-                
-                <div class="slider ">
-                  <div class="div-title-slider font">
-                    <div class="title-slider"><span class="result"></span><span class="title-slider-p"></span>
-                    </div>
-                    <a class="show-more">Ver más</a>
-                  </div>
-                    <div class="slide">
-                      <div class="slide-cards resistant" ></div>                
-                    </div>
-                    <button class="ctrl-btn ctrl-prev grow" value="resistant" ><i  class="icon-arrow_back_ios icon-next-prev" ></i></button> 
-                    <button class="ctrl-btn ctrl-next grow" value="resistant"><i class="icon-arrow_forward_ios icon-next-prev" ></i></button>
-                  </div>
-                  
-                  <div class="slider">
-                    <div class="div-title-slider font">
-                      <div class="title-slider"><span class="result"></span><span class="title-slider-p"></span>
-                      </div>
-                      <a class="show-more">Ver más </a></div>
-                      <div class="slide">
-                        <div class="slide-cards weaknesses" ></div>
-                      </div>
-                      <button class="ctrl-btn ctrl-prev grow" value="weaknesses"><i  class="icon-arrow_back_ios icon-next-prev" ></i></button> 
-                      <button class="ctrl-btn ctrl-next grow" value="weaknesses"><i class="icon-arrow_forward_ios icon-next-prev" ></i></button>
-                    </div>          
-                    
-                  </div>  
-                  
-                </main>
-              </section>
-              
-             
-      
-    </div>
-    <footer id="footer" >
-      <img src="images/nature.png" alt="" id="img-footer">
-      <div id="div-info-footer" class="text-aling">
-        <h2 class="font text-aling"><img src="images/normal.png" class="icon-small">POKEDEX</h2>
-        <h4 class="font text-aling"> Created by Elena Gordillo & Yudith Cumba</h4>
-        <span>
-          <i class="icon-css3 f-medium icons"></i> <i class="icon-github f-medium icons"></i> <i class="icon-html5 f-medium icons"></i> <i class="icon-javascript f-medium icons"></i>
-        </span>
-      </div>
-    </footer>
-
     <script src="main.js" type="module"></script>
+	  <script src="https://kit.awesome.com/2c36e9b7b1.js" crossorigin="anonymous"></script>
+
     
   </body>
-   
-   
+  
+  
 </html>
